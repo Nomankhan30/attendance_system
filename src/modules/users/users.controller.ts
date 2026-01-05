@@ -5,11 +5,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Inject } from '@nestjs/common';
 import { userSchema } from 'src/schemas/user.schema';
 import { UsersService } from './users.service';
-import { ZodValidationPipe } from 'src/pipes/zod-validation.pipe';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 @Controller("users")
 export class  UsersController{
-    constructor(private readonly usersService:UsersService){
-        console.log("user controller constructor")
+    constructor(private readonly UsersService:UsersService){
     }  
     @Post("createusers")
     //binding zod validation Pipe with create method
@@ -18,6 +17,6 @@ export class  UsersController{
     //defining body type for compile time safety
     create(@Body() body:CreateUserDto){
         //passing value to services create()
-        return this.usersService.create(body)
+        return this.UsersService.create(body)
     }   
 }
