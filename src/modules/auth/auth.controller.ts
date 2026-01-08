@@ -10,12 +10,18 @@ import type { CreateUserDto } from '../users/dto/create-user.dto';
 import { CreateUserSchema } from '../users/dto/create-user.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import type{ jwtUserPayload } from '../../common/interfaces/jwt.payload.interface';
+import { RoleGuard } from 'src/common/guards/role.guard';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly AuthService:AuthService ){}
   //get active user details
   @Get("me")
+  /*
+  Wrong Approach, Second guard will over-ride the first one
   @UseGuards(AuthGuard)
+  @UseGuards(RoleGuard)
+  */
+ @UseGuards(AuthGuard,RoleGuard)
   async getdetails(@User() user:jwtUserPayload){
     const userData=user
     //just for now, logiv must be in service
@@ -41,12 +47,19 @@ export class AuthController {
 @UsePipes(new ZodValidationPipe(loginSchema))
 async login(@Res({passthrough:true}) res:Response, @Body() body:CreateLoginDto){
   //debugger;
-  const {access_token}=await this.AuthService.login(body)  
-  res.cookie('access_token',access_token,{
+    
+  const tokenObject=await this.AuthService.login(body)  
+  if (tokenObject?.access_token){
+    res.cookie('access_token',tokenObject.access_token,{
             httpOnly:true,
             sameSite:true,
             secure:true
         })
+        return ("LOGIN SUCCESSFULL!")
+  }
+  //user not found
+  return tokenObject
+  
    
 }
 }

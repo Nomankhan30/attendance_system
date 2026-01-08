@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateLoginDto } from './dto/login.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { User } from 'src/schemas/user.schema';
+import { User } from '../../schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -21,7 +21,6 @@ export class AuthService {
     
     constructor(@InjectModel("user") private userModel:Model<User>,private readonly jwtService:JwtService,private readonly UserService:UsersService){}
     async signup(reqBody:CreateUserDto){
-        debugger;
         const user=await this.userModel.exists({email:reqBody.email})
         //if find() is used, user will always be truthy
         // cause incase of no result truthy value
@@ -35,7 +34,7 @@ export class AuthService {
             name:reqBody.name,
             email:reqBody.email,
             password:hashpass,
-            role:"student"
+            role:"teacher"
 
         })
         const result=await newUser.save()
@@ -48,7 +47,7 @@ export class AuthService {
         if (!user){
             return {msg:"User Not Found"}
         }
-        const access_token=await this.jwtService.signAsync({sub:user._id,username:user.name})
+        const access_token=await this.jwtService.signAsync({sub:user._id,role:user.role})
         return{
             access_token:access_token
            }

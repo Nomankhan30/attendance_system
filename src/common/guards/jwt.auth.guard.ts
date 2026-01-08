@@ -11,6 +11,7 @@ import { CanActivate,
     //inject jwt instance via constructor
     constructor(private readonly jwtService:JwtService){}
     async canActivate(context:ExecutionContext):Promise<boolean>{
+        // if req.user
         const request=context.switchToHttp().getRequest()
         const token=request.cookies.access_token
         if (!token){
