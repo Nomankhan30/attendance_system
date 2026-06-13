@@ -34,7 +34,7 @@ export class AuthService {
             name:reqBody.name,
             email:reqBody.email,
             password:hashpass,
-            role:"student"
+            role:reqBody.role
 
         })
         const result=await newUser.save()

@@ -8,11 +8,12 @@ import {ConfigModule, ConfigService} from '@nestjs/config'
 import { UsersController } from './modules/users/users.controller';
 import { TeachersModule } from './modules/teachers/teachers.module';
 import { ClassModule } from './modules/class/class.module';
+import { StudentsModule } from './modules/students/students.module';
 @Module({
   //LOAD ENV VAR
   imports: [ConfigModule.forRoot({
     isGlobal:true
-  }),AuthModule,UsersModule,
+  }),
   //USE MONGO URL FROM ENV TO MAKE DB CONNECTION 
   MongooseModule.forRootAsync({
     inject:[ConfigService],
@@ -24,9 +25,12 @@ import { ClassModule } from './modules/class/class.module';
       uri:config.get<string>("MONGO_URL")
     })
   }),
+  AuthModule,
+  UsersModule,
   TeachersModule,
-  ClassModule],
-  controllers: [AppController, UsersController],
+  ClassModule,
+StudentsModule],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

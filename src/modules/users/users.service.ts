@@ -14,4 +14,8 @@ export class UsersService {
         const result=await newUser.save()
         return result
     }
+    async getAllStudents(user){
+         const result=await this.userModel.find({role:"student"},{password:0})
+         return result     
+    }
 }

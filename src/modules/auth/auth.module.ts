@@ -11,7 +11,7 @@ import { ConfigService } from '@nestjs/config';
   // equivalent to mongoose.model('user', UserSchema)
   imports:[UsersModule,MongooseModule.forFeature([{name: "user",schema:userSchema}]),JwtModule.register({global:true,
     //global settings for all created tokens
-    signOptions:{expiresIn:"10m"},
+    signOptions:{expiresIn:"60m"},
     secret:process.env.JWT_SECRET||"NOMAN123"})],
   controllers: [AuthController],
   providers: [AuthService]
