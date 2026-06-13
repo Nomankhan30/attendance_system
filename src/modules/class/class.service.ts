@@ -53,4 +53,14 @@ export class ClassService {
         return classDoc
          
     }
+    async classInfo(classId:classIdDto,user){
+        console.log("cls dto",classId.classId)
+        const cls=await this.classModel.findOne({_id:classId.classId})  
+       console.log("cls",cls)
+       if (user.sub===cls?.teacherId || cls?.studentIds.includes(user.sub)){
+          return cls 
+       }
+       //const b=re
+       console.log("usering",user)
+    }
 }

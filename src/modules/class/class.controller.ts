@@ -31,4 +31,10 @@ export class ClassController {
     classDetails(@Body(new ZodValidationPipe(classSchema)) className:classDto,@User() user){
         return this.classService.classDetails(className.className,user)
     }
+
+    @Get(":classId")
+    classInfo(@User() user, @Param(new ZodValidationPipe(classIdSchema)) classId:classIdDto){
+        return this.classService.classInfo(classId,user)
+    }
+
 }
