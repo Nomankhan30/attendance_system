@@ -11,6 +11,9 @@ import type {addStudentDto} from './dto/add-student.dto';
 import type{ jwtUserPayload } from 'src/common/interfaces/jwt.payload.interface';
 import type{ classIdDto } from './dto/classId.dto';
 import { classIdSchema } from './dto/classId.dto';
+import { Role } from 'src/common/enums/role.enums';
+import { Roles } from 'src/common/decorators/roles.decorator';
+
 @Controller('class')
 @UseGuards(AuthGuard,RoleGuard)
 //using pipe at parameter level will run it twice
@@ -19,6 +22,7 @@ import { classIdSchema } from './dto/classId.dto';
 
 export class ClassController {
     constructor(private readonly classService:ClassService){}
+    @Roles(Role.Teacher)
     @Post(":classId/add-student")
     //extracting and validatig whole object "{studentId:123 or any other Id}" in param
     //not extracting just id like "123" else validation obj will not match
@@ -27,14 +31,15 @@ export class ClassController {
         return this.classService.addStudentToClass(user,stuid,classId)
     }
 
+    @Roles(Role.Teacher)
     @Post()
     classDetails(@Body(new ZodValidationPipe(classSchema)) className:classDto,@User() user){
         return this.classService.classDetails(className.className,user)
     }
-
     @Get(":classId")
     classInfo(@User() user, @Param(new ZodValidationPipe(classIdSchema)) classId:classIdDto){
         return this.classService.classInfo(classId,user)
     }
+    
 
 }
